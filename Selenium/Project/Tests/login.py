@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import unittest
+from Selenium.Project.Pages.loginPage import LoginPage
+from Selenium.Project.Pages.homePage import HomePage
 
 class LoginTest(unittest.TestCase):
 
@@ -17,18 +19,18 @@ class LoginTest(unittest.TestCase):
         cls.driver.maximize_window()
 
     def test_01_login_valid(self):
-        self.driver.get("https://opensource-demo.orangehrmlive.com/")
-        email_field = self.driver.find_element(By.NAME, "username")
-        email_field.send_keys("Admin")
-        password_field = self.driver.find_element(By.NAME, "password")
-        password_field.send_keys("admin123")
-        login_button = self.driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[3]/button')
-        login_button.click()
-        self.driver.implicitly_wait(10)
-        userdropdown = self.driver.find_element(By.CLASS_NAME, "oxd-userdropdown-tab")
-        userdropdown.click()
-        logout_button = self.driver.find_element(By.LINK_TEXT, "Logout")
-        logout_button.click()
+        driver = self.driver
+        driver.get("https://opensource-demo.orangehrmlive.com/")
+
+        login = LoginPage(driver)
+        login.enter_username("Admin")
+        login.enter_password("admin123")
+        login.click_login()
+
+        homepage = HomePage(driver)
+        homepage.click_userdropdown()
+        homepage.click_logout()
+
         time.sleep(2)
 
     @classmethod
@@ -36,8 +38,6 @@ class LoginTest(unittest.TestCase):
         cls.driver.close()
         cls.driver.quit()
         print("Test Complete. Login Valid.")
-
-
 
 if __name__ == '__main__':
     unittest.main()
