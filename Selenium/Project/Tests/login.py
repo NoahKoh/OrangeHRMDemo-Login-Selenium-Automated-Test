@@ -1,11 +1,12 @@
+import unittest
+import time
+import HtmlTestRunner
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
-import unittest
 from Selenium.Project.Pages.loginPage import LoginPage
 from Selenium.Project.Pages.homePage import HomePage
 
@@ -13,7 +14,7 @@ class LoginTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.service = Service("/chromedriver")  # Driver path
+        cls.service = Service("/chromedriver") # Driver path
         cls.driver = webdriver.Chrome(service=cls.service)
         cls.driver.implicitly_wait(10)
         cls.driver.maximize_window()
@@ -40,4 +41,4 @@ class LoginTest(unittest.TestCase):
         print("Test Complete. Login Valid.")
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output="/Reports")) # Report Directory Path
