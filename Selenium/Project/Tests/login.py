@@ -3,10 +3,6 @@ import time
 import HtmlTestRunner
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from Selenium.Project.Pages.loginPage import LoginPage
 from Selenium.Project.Pages.homePage import HomePage
 
@@ -29,16 +25,47 @@ class LoginTest(unittest.TestCase):
         login.click_login()
 
         homepage = HomePage(driver)
+        self.assertTrue(homepage.is_userdropdown_present(), "Login fail. User dropdown not found")
         homepage.click_userdropdown()
         homepage.click_logout()
 
         time.sleep(2)
 
+    def test_02_login_invalid_email(self):
+        driver = self.driver
+        driver.get("https://opensource-demo.orangehrmlive.com/")
+        login = LoginPage(driver)
+        login.enter_username("InvalidUser")
+        login.enter_password("admin123")
+        login.click_login()
+        error_message = login.get_error_message()
+        self.assertEqual(error_message, "Invalid credentials", "Error message text does not match")
+
+    def test_03_login_invalid_password(self):
+        driver = self.driver
+        driver.get("https://opensource-demo.orangehrmlive.com/")
+        login = LoginPage(driver)
+        login.enter_username("Admin")
+        login.enter_password("InvalidPassword")
+        login.click_login()
+        error_message = login.get_error_message()
+        self.assertEqual(error_message, "Invalid credentials", "Error message text does not match")
+
+    def test_04_login_invalid_email_password(self):
+        driver = self.driver
+        driver.get("https://opensource-demo.orangehrmlive.com/")
+        login = LoginPage(driver)
+        login.enter_username("InvalidUser")
+        login.enter_password("InvalidPassword")
+        login.click_login()
+        error_message = login.get_error_message()
+        self.assertEqual(error_message, "Invalid credentials", "Error message text does not match")
+
     @classmethod
     def tearDownClass(cls):
         cls.driver.close()
         cls.driver.quit()
-        print("Test Complete. Login Valid.")
+        print("Test Complete")
 
 if __name__ == '__main__':
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output="/Reports")) # Report Directory Path
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output="/Selenium/Reports")) # Report Directory Path
